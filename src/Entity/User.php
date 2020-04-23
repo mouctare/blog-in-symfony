@@ -9,11 +9,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @UniqueEntity(
- *  fields={"email"}
- *  message= "L'email que vous avez indiqué est déjà utilisé !"
- * )
- */
+
+    * @ORM\Entity
+    * @UniqueEntity(
+    *     fields={"email"},
+    *     errorPath="email",
+    *     message="Ce mail a été déjà utilisé."
+    * )
+    */
+ 
 class User 
 {
     /**
@@ -88,13 +92,7 @@ class User
 
         return $this;
     }
-   // public function eraseCredentials(){} // on implément les methode le l'interface
-
-  //  public function getSalt(){}
-   // public function getRoles() {
-     //   return ['ROLE_USER'];
-
-      //  }
-    //}
-   }
    
+   }
+
+
