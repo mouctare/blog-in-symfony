@@ -150,6 +150,8 @@ class Article
             }
         }
 
+        
+
         return $this;
     }
 
