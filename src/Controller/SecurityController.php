@@ -1,46 +1,48 @@
 <?php
 
 namespace App\Controller;
-
+use App\Form\RegistrationType;
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-//use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-use App\Entity\User;
-use App\Form\RegistrationType;
-use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-
-
-class SecurityController extends AbstractController
+class SecurityController extends abstractController
 {
     /**
-     * @Route("/inscription", name="security_registration") //cette function va etre éxécuté quand on appelle cette route
+     * @Route("/inscription", name="security_registration")
      */
-   public function registration(Request $request,EntityManagerInterface $manager) {//UserPasswordEncoderInterface $encoder
-       $user = new User();
+    public function registration(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        // 1) build the form
+        $user = new User();
+        $form = $this->createForm(RegistrationType::class, $user);
 
-       $form = $this->createForm(RegistrationType::class, $user);//on relie les champs du formulaire au champ de l'utilisateur.
+        // 2) handle the submit (will only happen on POST)
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
 
-       $form->handleRequest($request); //je veux que tu analyse c'est qui se pass dans la requetes
-       if($form->isSubmitted() && $form->isValid()){
-          // $hash = $encoder->encodePassword($user,$user->getPassword());
+            // 3) Encode the password (you could also do this via Doctrine listener)
+            $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
+            $user->setPassword($password);
 
-          // $user->setPassword($hash);// je modifie le mot de pass et je me le hash
+            // 4) save the User!
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($user);
+            $entityManager->flush();
 
-           $manager->persist($user);
-           $manager->flush();
+            // ... do any other work - like sending them an email, etc
+            // maybe set a "flash" success message for the user
 
-       }
+            return $this->redirectToRoute('security/registration.html.twig');
+        }
 
-
-    
-
-       return $this->render('security/registration.html.twig',[
-           'form' => $form->createView()// je lui pass des variables qu'il puisse utilisé.
-       ]);
-
-   
+        return $this->render(
+            'security/registration.html.twig',
+            array('form' => $form->createView())
+        );
+    }
 }
-}
+
