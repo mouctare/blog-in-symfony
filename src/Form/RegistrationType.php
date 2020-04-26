@@ -6,8 +6,10 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
-//use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+//use Symfony\Component\Form\Extension\Core\Type\EmailType;
+//use Symfony\Component\Form\Extension\Core\Type\TextType;
+//use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class RegistrationType extends AbstractType
 {
@@ -16,15 +18,16 @@ class RegistrationType extends AbstractType
         $builder
             ->add('email')
             ->add('username')
-            ->add('password')
-            ->add('confirm_password')// pour demander à l'utilisateur de con firmer son mot de pass
+            ->add('password', PasswordType::class)
+            ->add('confirm_password', PasswordType::class)
+            
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'data_class' => User::class,
-        ]);
+        ));
     }
 }
