@@ -6,6 +6,7 @@ use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -36,7 +37,7 @@ class SecurityController extends abstractController
             // ... do any other work - like sending them an email, etc
             // maybe set a "flash" success message for the user
 
-            return $this->redirectToRoute('security/registration.html.twig');
+            return $this->redirectToRoute('security_login');
         }
 
         return $this->render(
@@ -44,5 +45,19 @@ class SecurityController extends abstractController
             array('form' => $form->createView())
         );
     }
+      /**
+     * @Route("/connexion", name="security_login")
+     */
+
+     public function login() {
+        return $this->render(
+            'security/login.html.twig');
+
+
+     }
+      /**
+     * @Route("/deconnexion", name="security_logout")
+     */
+    public function logout(){}
 }
 
