@@ -1,9 +1,8 @@
 <?php
 
 namespace App\Entity;
-
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -13,8 +12,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 /**
  * @ORM\Entity
- * @UniqueEntity(fields="email", message="Email already taken")
- * @UniqueEntity(fields="username", message="Username already taken")
+ * @UniqueEntity(fields="email", message="L'mail  que vous avez indiqué est déjà utilisé ")
+ 
  */
 class User implements UserInterface
 {
@@ -38,25 +37,30 @@ class User implements UserInterface
      */
     private $username;
 
+    
     /**
-     * @Assert\NotBlank()
-     * @Assert\Length(max=4096)
-     */
-    private $plainPassword;
-
-    /**
-     * The below length depends on the "algorithm" you use for encoding
-     * the password, but this works well with bcrypt.
-     *
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="string", length=255)
+     *  @Assert\Length(min="8", minMessage="Votre mot de passe doit faire minimum 8 caractères")
+     
      */
     private $password;
+    /**
+     * @Assert\EqualTo(propertyPath="password",message="Vous n'avez pas tapez le meme mot de passe")
+     */
+
+    public $confirm_password;
+
+    public function getId(){
+
+
+        return $this->id;
+    }
 
     
 
     // other properties and methods
 
-    public function getEmail()
+    public function getEmail(): ?string 
     {
         return $this->email;
     }
@@ -76,15 +80,8 @@ class User implements UserInterface
         $this->username = $username;
     }
 
-    public function getPlainPassword()
-    {
-        return $this->plainPassword;
-    }
-
-    public function setPlainPassword($password)
-    {
-        $this->plainPassword = $password;
-    }
+    
+   
 
     public function getPassword()
     {
@@ -99,33 +96,16 @@ class User implements UserInterface
     public function getSalt()
     {
         // The bcrypt and argon2i algorithms don't require a separate salt.
-        // You *may* need a real salt if you choose a different encoder.
-        return null;
-    }
-
-
-        /**
-     * @see UserInterface
-     */
-    public function getRoles(): array
-    {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
-    }
-
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
-
-        return $this;
-    }
-        
+    
+    }  
     
 
     public function eraseCredentials()
     {
+
     }  
+    public function getRoles() {
+
+        return [ 'ROLE_USER'];
+    }
 }
