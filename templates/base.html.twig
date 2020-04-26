@@ -24,6 +24,21 @@
                     <a class="nav-link" href="{{ path('blog_create')}}">Créer un articule</a>
                
                 </ul>
+                {% if not app.user %}
+                 <li class="nav-item">
+                    <a  href="{{ path('security_login')}}" class="nav-link">
+                        Connexion
+                    
+                    </a>
+                     </ul>
+                    {% else %}
+                      <li class="nav-item">
+                    <a  href="{{ path('security_logout')}}" class="nav-link">
+                        Déconnexion
+                    
+                    </a>
+                     </ul>
+                     {% endif %}
                
             </div>
         </nav>
