@@ -1,13 +1,16 @@
 <?php
 
 namespace App\Controller;
-use App\Form\RegistrationType;
 use App\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\RegistrationType;
+
+//use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class SecurityController extends abstractController
@@ -15,7 +18,7 @@ class SecurityController extends abstractController
     /**
      * @Route("/inscription", name="security_registration")
      */
-    public function registration(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function registration(Request $request,  EntityManagerInterface $entityManager ,UserPasswordEncoderInterface $encoder)
     {
         // 1) build the form
         $user = new User();
@@ -26,8 +29,8 @@ class SecurityController extends abstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             // 3) Encode the password (you could also do this via Doctrine listener)
-            $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
-            $user->setPassword($password);
+            $hash = $encoder->encodePassword($user, $user->getPassword());
+            $user->setPassword($hash);
 
             // 4) save the User!
             $entityManager = $this->getDoctrine()->getManager();
