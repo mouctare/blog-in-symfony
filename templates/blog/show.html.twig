@@ -11,10 +11,10 @@
       </div>
       </article>
       {{ form_start(commentForm)}}
-      {{ form_row(commentForm.author, { 'attr': {'placelder': "Votre nom"} })}}
-      {{ form_row(commentForm.content, { 'attr': {'placelder': "Votre commentaire"} })}}
+      {{ form_row(commentForm.author, { 'attr': {'placeholder': "Votre nom"}})}}
+      {{ form_row(commentForm.content, { 'attr': {'placeholder': "Votre commentaire"}})}}
        <button type="submit" class="btn btn-success">Commenter !</button>
        {{ form_end(commentForm)}}
-       
+
 
       {% endblock %}
