@@ -13,6 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmiType;
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
 use App\Form\ArticleType;
+use App\Entity\Comment;
+use App\Form\CommentType;
 
 
 
@@ -127,11 +129,15 @@ class BlogController extends AbstractController
      * @Route("blog/{id}", name="blog_show")
      */
     public function show(Article $article) {
+
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
         //ArticleRepository $repo,$id
         //$repo = $this->getDoctrine()->getRepository(Article::class);
         //$article = $repo->find($id);
         return $this->render('blog/show.html.twig',[
-            'article' => $article
+            'article' => $article,
+            'commentForm' => $form->createView() // je veux la partie affichable de mon comment.
 
 
 
