@@ -10,11 +10,20 @@
           <p>{{ article.content | raw}} </p>
       </div>
       </article>
+    
+
+      {% if app.user%} 
       {{ form_start(commentForm)}}
       {{ form_row(commentForm.author, { 'attr': {'placeholder': "Votre nom"}})}}
       {{ form_row(commentForm.content, { 'attr': {'placeholder': "Votre commentaire"}})}}
        <button type="submit" class="btn btn-success">Commenter !</button>
        {{ form_end(commentForm)}}
 
+       {% else %}
+        <h2>Vous ne pouvez pas commenter si vous n'etes pas connecté! </h2>
+        <a href="{{path( 'security_login')}}" class="btn btn-primary">
+             Connexion
+        </a>
+        {% endif %}
 
       {% endblock %}
