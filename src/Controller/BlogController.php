@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmiType;
 use App\Entity\Article;
@@ -128,10 +129,23 @@ class BlogController extends AbstractController
     /**
      * @Route("blog/{id}", name="blog_show")
      */
-    public function show(Article $article) {
+    public function show(Article $article, Request $request, EntityManagerInterface $manager) {
 
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request); //gère la reque que je te passe si,
+        if($form->isSubmitted() && $form->isValid()){
+            $comment->setCreatedAt(new \DateTime())
+                    ->setArticle($article);
+            // alors je fais appelle à mon manager
+            $manager->persist($comment);
+            $manager->flush();
+
+            return $this->redirectToRoute( 'blog_show', [
+                'id' => $article->getId()
+            ]);
+
+        }
         //ArticleRepository $repo,$id
         //$repo = $this->getDoctrine()->getRepository(Article::class);
         //$article = $repo->find($id);
