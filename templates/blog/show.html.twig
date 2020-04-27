@@ -1,14 +1,20 @@
-{% extends 'base.html.twig' %}
+      {% extends 'base.html.twig' %}
 
-{% block body %}
+      {% block body %}
 
-<article>
-<h2>{{ article.title}}</h2>
- <div class="metadata">Ecrit le {{ article.createdAt | date('d/m/y')}} à {{ article.createdAt | date('H:i ')}} dans la catégorie politique </div>
-<div class="content">
-  <img src="{{ article.image}}"  alt="">
-    <p>{{ article.content | raw}} </p>
-</div>
- </article>
+      <article>
+      <h2>{{ article.title}}</h2>
+      <div class="metadata">Ecrit le {{ article.createdAt | date('d/m/y')}} à {{ article.createdAt | date('H:i ')}} dans la catégorie politique </div>
+      <div class="content">
+        <img src="{{ article.image}}"  alt="">
+          <p>{{ article.content | raw}} </p>
+      </div>
+      </article>
+      {{ form_start(commentForm)}}
+      {{ form_row(commentForm.author, { 'attr': {'placelder': "Votre nom"} })}}
+      {{ form_row(commentForm.content, { 'attr': {'placelder': "Votre commentaire"} })}}
+       <button type="submit" class="btn btn-success">Commenter !</button>
+       {{ form_end(commentForm)}}
+       
 
-{% endblock %}
+      {% endblock %}
